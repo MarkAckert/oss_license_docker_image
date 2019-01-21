@@ -15,4 +15,22 @@ RUN curl -L -X GET https://github.com/nexB/scancode-toolkit/releases/download/v2
 RUN tar xvjf scancode-toolkit-2.9.2.tar.bz2
 RUN ln -s /opt/scancode/scancode-toolkit-2.9.2/scancode /usr/local/bin/scancode
 
-CMD ["/usr/sbin/sshd", "-D"]
+
+# JNLP Agent Configuration (Copied from Jenkins JNLP Container Dockerfiles)
+ARG VERSION=3.28
+
+RUN curl --create-dirs -fsSLo /usr/share/jenkins/slave.jar https://repo.jenkins-ci.org/public/org/jenkins-ci/main/remoting/${VERSION}/remoting-${VERSION}.jar \
+  && chmod 755 /usr/share/jenkins \
+  && chmod 644 /usr/share/jenkins/slave.jar
+
+USER jenkins
+ENV AGENT_WORKDIR=/home/jenkins
+RUN mkdir /home/jenkins/.jenkins
+
+VOLUME /home/jenkins/.jenkins
+VOLUME /home/jenkins
+WORKDIR /home/jenkins
+
+COPY jenkins-agent-entrypoint /usr/local/bin/jenkins-agent-entrypoint
+
+ENTRYPOINT [ "jenkins-agent-entrypoint" ]
