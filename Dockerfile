@@ -24,13 +24,12 @@ RUN curl --create-dirs -fsSLo /usr/share/jenkins/slave.jar https://repo.jenkins-
   && chmod 644 /usr/share/jenkins/slave.jar
 
 USER jenkins
-ENV AGENT_WORKDIR=/home/jenkins
 RUN mkdir /home/jenkins/.jenkins
-
 VOLUME /home/jenkins/.jenkins
 VOLUME /home/jenkins
 WORKDIR /home/jenkins
 
+USER root
 COPY jenkins-agent-entrypoint /usr/local/bin/jenkins-agent-entrypoint
 
 ENTRYPOINT [ "jenkins-agent-entrypoint" ]
