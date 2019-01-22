@@ -8,6 +8,7 @@ RUN apt-get -y install ruby2.5 ruby2.5-dev
 RUN gem install license_finder
 RUN apt-get install -y python-dev python-pip bzip2 xz-utils zlib1g libxml2-dev libxslt1-dev
 
+COPY jenkins-agent-entrypoint /usr/local/bin/jenkins-agent-entrypoint
 
 RUN mkdir -p /opt/scancode
 WORKDIR /opt/scancode
@@ -28,8 +29,5 @@ RUN mkdir /home/jenkins/.jenkins
 VOLUME /home/jenkins/.jenkins
 VOLUME /home/jenkins
 WORKDIR /home/jenkins
-
-USER root
-COPY jenkins-agent-entrypoint /usr/local/bin/jenkins-agent-entrypoint
 
 ENTRYPOINT [ "jenkins-agent-entrypoint" ]
